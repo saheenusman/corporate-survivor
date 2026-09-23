@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en" data-text="m">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1d2433">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Corp Survivor">
+<title>Corporate Survivor — One More Quick Thing™</title>
+<style>/*__CSS__*/</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="touch-layer"></div>
+
+<!-- loading -->
+<section id="loading" class="screen show">
+  <div class="load-inner">
+    <h1 class="logo"><span>Corporate</span><span>Survivor</span></h1>
+    <div class="sticky tilt-l">Preparing your workstation…</div>
+    <div class="seg-bar" id="load-bar"></div>
+    <p class="load-msg" id="load-msg">Checking if the printer works…</p>
+  </div>
+</section>
+
+<!-- rotate -->
+<section id="rotate" class="screen">
+  <div class="rotate-phone"><div class="rotate-screen"></div></div>
+  <h2>Rotate your phone</h2>
+  <p>Corporate Survivor is played in landscape. Your manager prefers portrait. Ignore him.</p>
+</section>
+
+<!-- fatal -->
+<section id="fatal" class="screen">
+  <h2>This browser can't run the office</h2>
+  <p id="fatal-msg">3D graphics (WebGL) are turned off or unsupported. Try Chrome or Safari, or enable hardware acceleration.</p>
+</section>
+
+<!-- title -->
+<section id="title" class="screen">
+  <div class="title-col">
+    <h1 class="logo big"><span>Corporate</span><span>Survivor</span></h1>
+    <div class="sticky tilt-r tagline">One More Quick Thing™</div>
+    <nav class="menu" id="title-menu">
+      <button class="btn primary" data-act="continue" id="btn-continue" hidden>Continue</button>
+      <button class="btn primary" data-act="play" id="btn-play">Play</button>
+      <button class="btn" data-act="career">Career</button>
+      <button class="btn" data-act="settings">Settings</button>
+      <button class="btn" data-act="credits">Credits</button>
+    </nav>
+  </div>
+  <div class="badge-card" id="title-badge">
+    <div class="badge-top">SYNERGEX</div>
+    <div class="badge-photo"></div>
+    <div class="badge-name">Employee #4471</div>
+    <div class="badge-meta" id="badge-meta">Day 1 · Shift 8:57 AM – 5:30 PM</div>
+  </div>
+  <div class="ver">v1.3 · tap anywhere for full screen</div>
+</section>
+
+<!-- HUD -->
+<section id="hud" class="layer">
+  <div class="hud-tl">
+    <div class="time-card">
+      <div class="time" id="hud-time">08:57 AM</div>
+      <div class="act" id="hud-act">Act 1 · Normal Monday</div>
+    </div>
+    <button class="icon-btn" id="btn-tasks" aria-label="Tasks"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM8.5 11h7M8.5 14.5h7M8.5 18h4"/></svg><span class="count" id="task-count">1</span></button>
+    <div class="objective sticky" id="hud-obj">Get to your desk.</div>
+  </div>
+  <div class="hud-tr">
+    <button class="icon-btn" id="btn-pause" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg></button>
+    <div class="stats">
+      <div class="stat" id="st-energy"><span class="lbl">Energy</span><span class="bar"></span></div>
+      <div class="stat" id="st-sanity"><span class="lbl">Sanity</span><span class="bar"></span></div>
+      <div class="stat" id="st-workload"><span class="lbl">Workload</span><span class="bar"></span></div>
+      <div class="bladder" id="st-bladder">Restroom: urgent</div>
+    </div>
+  </div>
+  <div id="toasts"></div>
+  <div id="banner"></div>
+  <div id="subtitle"></div>
+  <div id="hint"></div>
+  <div id="joy" class="joy"><div class="joy-knob"></div></div>
+  <button id="btn-act" class="act-btn" hidden><span id="act-label">USE</span></button>
+  <button id="btn-alt" class="alt-btn" hidden>Stand</button>
+</section>
+
+<!-- dialogue -->
+<section id="dialogue" class="layer">
+  <div class="dlg-box" id="dlg-box">
+    <div class="dlg-badge" id="dlg-badge"><span class="dot"></span><span class="nm" id="dlg-name"></span><span class="rl" id="dlg-role"></span></div>
+    <p class="dlg-text" id="dlg-text"></p>
+    <div class="dlg-next" id="dlg-next">Tap to continue</div>
+  </div>
+  <div class="dlg-choices" id="dlg-choices"></div>
+</section>
+
+<!-- computer / generic choice menu -->
+<section id="menu-panel" class="layer modal">
+  <div class="panel wide">
+    <header class="panel-head"><h2 id="mp-title">Your computer</h2><button class="x" data-close>×</button></header>
+    <p class="panel-sub" id="mp-sub"></p>
+    <div class="option-list" id="mp-list"></div>
+  </div>
+</section>
+
+<!-- work montage -->
+<section id="montage" class="layer">
+  <div class="montage-card">
+    <div class="m-top"><span class="m-clock" id="m-clock">10:00 AM</span><span class="m-label">Working</span></div>
+    <h3 id="m-task">Update the Q3 deck</h3>
+    <div class="m-bar"><i id="m-fill"></i></div>
+    <p id="m-line">Moving a chart two pixels to the left…</p>
+  </div>
+</section>
+
+<!-- act card -->
+<section id="actcard" class="layer"><div class="ac-inner"><div class="ac-kicker" id="ac-kicker">Day 1</div><div class="ac-title" id="ac-title">The Quick Thing</div><div class="ac-time" id="ac-time">08:57 AM</div></div></section>
+
+<!-- note popup (environment jokes, info) -->
+<section id="note" class="layer modal-lite"><div class="note-card sticky" id="note-card"><p id="note-text"></p><button class="btn small" data-close>OK</button></div></section>
+
+<!-- pause -->
+<section id="pause" class="layer modal">
+  <div class="panel">
+    <header class="panel-head"><h2>Paused</h2><button class="x" data-close>×</button></header>
+    <nav class="menu">
+      <button class="btn primary" data-act="resume">Resume</button>
+      <button class="btn" data-act="status">Status &amp; notes</button>
+      <button class="btn" data-act="fullscreen" id="btn-fs">Full screen</button>
+      <button class="btn" data-act="settings">Settings</button>
+      <button class="btn" data-act="quit">Save &amp; quit to title</button>
+    </nav>
+  </div>
+</section>
+
+<!-- tasks -->
+<section id="tasks" class="layer modal">
+  <div class="panel">
+    <header class="panel-head"><h2>To-do</h2><button class="x" data-close>×</button></header>
+    <ul class="task-list" id="task-list"></ul>
+  </div>
+</section>
+
+<!-- status -->
+<section id="status" class="layer modal">
+  <div class="panel wide">
+    <header class="panel-head"><h2>Status</h2><button class="x" data-close>×</button></header>
+    <div class="status-grid" id="status-grid"></div>
+  </div>
+</section>
+
+<!-- settings -->
+<section id="settings" class="layer modal">
+  <div class="panel wide">
+    <header class="panel-head"><h2>Settings</h2><button class="x" data-close>×</button></header>
+    <div class="settings-grid" id="settings-grid"></div>
+  </div>
+</section>
+
+<!-- career -->
+<section id="career" class="layer modal">
+  <div class="panel wide">
+    <header class="panel-head"><h2>Your career</h2><button class="x" data-close>×</button></header>
+    <div id="career-body"></div>
+  </div>
+</section>
+
+<!-- credits -->
+<section id="credits" class="layer modal">
+  <div class="panel">
+    <header class="panel-head"><h2>Credits</h2><button class="x" data-close>×</button></header>
+    <div class="credits">
+      <p><b>Corporate Survivor</b> — a small game about one very long Monday.</p>
+      <p>Built with three.js. Every character, room, sign and sound is generated in code: no downloaded assets.</p>
+      <p>Cast: Rahul, Anu, Mr. Menon, Priya from HR, Deepa, Arjun, Neha, Dev, Kiran — and the printer, as itself.</p>
+      <p class="fine">No managers were harmed. Several meetings were.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ending -->
+<section id="ending" class="layer">
+  <div class="end-lines" id="end-lines"></div>
+  <div class="end-summary" id="end-summary"></div>
+</section>
+
+<div id="fade"></div>
+<script>/*__JS__*/</script>
+</body>
+</html>

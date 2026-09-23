@@ -1,0 +1,18 @@
+{
+  "name": "corporate-survivor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Corporate Survivor: One More Quick Thing - a mobile-first 3D workplace survival comedy",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "serve": "npx --yes http-server dist -p 8080 -c-1"
+  },
+  "dependencies": {
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

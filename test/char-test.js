@@ -1,0 +1,23 @@
+import * as THREE from 'three';
+import { Character, createSharedMaterials } from '../src/js/characters/character.js';
+import { LOOKS } from '../src/js/characters/looks.js';
+const r = new THREE.WebGLRenderer({ antialias: true });
+r.setSize(1280, 640); document.body.appendChild(r.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#dfe3e8');
+scene.add(new THREE.HemisphereLight(0xeaf2ff, 0x8a7a68, 2.2));
+const d = new THREE.DirectionalLight(0xfff1dc, 2.0); d.position.set(3, 5, 4); scene.add(d);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshLambertMaterial({ color: '#8b96a3' })); floor.rotation.x = -Math.PI / 2; scene.add(floor);
+const shared = createSharedMaterials();
+const ids = ['player', 'rahul', 'anu', 'manager', 'hr', 'deepa', 'arjun', 'neha'];
+const poses = (new URLSearchParams(location.search).get('poses') || 'idle,idle,idle,idle,idle,idle,idle,idle').split(',');
+const chars = ids.map((id, i) => { const c = new Character(LOOKS[id], shared); c.group.position.set((i - 3.5) * 0.85, 0, 0); scene.add(c.group); c.anim.setBase(poses[i] || 'idle'); c.anim.w = { [poses[i] || 'idle']: 1 }; return c; });
+const yaw = parseFloat(new URLSearchParams(location.search).get('yaw') || '0');
+chars.forEach((c) => c.setYaw(yaw));
+if (poses.includes('walk')) chars.forEach((c, i) => { if (poses[i] === 'walk' || poses[i]==='run') c.anim.speed = poses[i]==='run'?4:1.6; });
+const cam = new THREE.PerspectiveCamera(30, 2, 0.1, 100); cam.position.set(0, 1.3, 7.5); cam.lookAt(0, 0.95, 0);
+const zoom = new URLSearchParams(location.search).get('zoom');
+if (zoom) { cam.position.set(0, 1.65, 1.2); cam.lookAt(0, 1.62, 0); chars.forEach((c,i)=>c.group.position.x=(i-parseInt(zoom))*0.85); }
+for (let i = 0; i < 40; i++) chars.forEach((c) => c.update(1 / 30));
+chars.forEach((c)=>{ c.showProp && 0; });
+r.render(scene, cam);
+window.__done = true;
